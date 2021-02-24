@@ -13,7 +13,7 @@ import {
 export abstract class JavaBase {
   protected http: httpm.HttpClient;
   protected version: semver.Range;
-  protected arch: string;
+  protected architecture: string;
   protected javaPackage: string;
 
   constructor(
@@ -26,7 +26,7 @@ export abstract class JavaBase {
     });
 
     this.version = this.normalizeVersion(installerOptions.version);
-    this.arch = installerOptions.arch;
+    this.architecture = installerOptions.arch;
     this.javaPackage = installerOptions.javaPackage;
   }
 
@@ -57,6 +57,8 @@ export abstract class JavaBase {
   }
 
   protected get toolcacheFolderName(): string {
+    // TO-DO: compare with other tools to check if it should be:
+    // `Java_${this.distributor}_${this.javaPackage}` vs `java_${this.distributor}_${this.javaPackage}`;
     return `Java_${this.distributor}_${this.javaPackage}`;
   }
 
@@ -64,7 +66,7 @@ export abstract class JavaBase {
     const javaPath = tc.find(
       this.toolcacheFolderName,
       this.version.raw,
-      this.arch
+      this.architecture
     );
     if (!javaPath) {
       return null;
