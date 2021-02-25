@@ -34,7 +34,7 @@ export class AdoptOpenJDKDistributor extends JavaBase {
     availableVersions.forEach(ver => {
       const item = ver as any;
       item.binaries = [];
-      console.log(JSON.stringify(item));
+      console.log(JSON.stringify(item.version_data.semver));
     });
     const resolvedFullVersion = availableVersions.find(item =>
       semver.satisfies(item.version_data.semver, version)

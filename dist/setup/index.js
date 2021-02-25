@@ -13318,7 +13318,7 @@ class AdoptOpenJDKDistributor extends base_installer_1.JavaBase {
             availableVersions.forEach(ver => {
                 const item = ver;
                 item.binaries = [];
-                console.log(JSON.stringify(item));
+                console.log(JSON.stringify(item.version_data.semver));
             });
             const resolvedFullVersion = availableVersions.find(item => semver_1.default.satisfies(item.version_data.semver, version));
             if (!resolvedFullVersion) {
