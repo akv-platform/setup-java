@@ -8,11 +8,7 @@ import semver from 'semver';
 import { IS_WINDOWS, macOSJavaContentDir } from '../util';
 import { JavaBase } from './base-installer';
 import { IAdoptAvailableVersions } from './adoptopenjdk-models';
-import {
-  JavaInstallerOptions,
-  JavaDownloadRelease,
-  JavaInstallerResults
-} from './base-models';
+import { JavaInstallerOptions, JavaDownloadRelease, JavaInstallerResults } from './base-models';
 
 export class AdoptOpenJDKDistributor extends JavaBase {
   constructor(installerOptions: JavaInstallerOptions) {
@@ -21,9 +17,7 @@ export class AdoptOpenJDKDistributor extends JavaBase {
 
   // TO-DO: Validate that all versions are available through API
 
-  protected async findPackageForDownload(
-    version: semver.Range
-  ): Promise<JavaDownloadRelease> {
+  protected async findPackageForDownload(version: semver.Range): Promise<JavaDownloadRelease> {
     const availableVersions = await this.getAvailableVersions();
 
     const resolvedFullVersion = availableVersions.find(item =>
@@ -31,9 +25,7 @@ export class AdoptOpenJDKDistributor extends JavaBase {
     );
 
     if (!resolvedFullVersion) {
-      const availableOptions = availableVersions
-        .map(item => item.version_data.semver)
-        .join(', ');
+      const availableOptions = availableVersions.map(item => item.version_data.semver).join(', ');
       const availableOptionsMessage = availableOptions
         ? `\nAvailable versions: ${availableOptions}`
         : '';
@@ -54,9 +46,7 @@ export class AdoptOpenJDKDistributor extends JavaBase {
     };
   }
 
-  protected async downloadTool(
-    javaRelease: JavaDownloadRelease
-  ): Promise<JavaInstallerResults> {
+  protected async downloadTool(javaRelease: JavaDownloadRelease): Promise<JavaInstallerResults> {
     let javaPath: string;
     let extractedJavaPath: string;
 
@@ -117,7 +107,7 @@ export class AdoptOpenJDKDistributor extends JavaBase {
     const availableVersions: IAdoptAvailableVersions[] = [];
     while (true) {
       console.log(page_index);
-      const requestArguments = `${baseRequestArguments}&page_size=20&page=${page_index}`
+      const requestArguments = `${baseRequestArguments}&page_size=20&page=${page_index}`;
       const availableVersionsUrl = `https://api.adoptopenjdk.net/v3/assets/version/${encodedVersionRange}?${requestArguments}`;
 
       const paginationPage = (

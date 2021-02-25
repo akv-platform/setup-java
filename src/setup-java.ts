@@ -30,9 +30,7 @@ async function run() {
     };
     const distributor = getJavaDistributor(javaDistributor, initOptions);
     if (!distributor) {
-      throw new Error(
-        `No supported distributor was found for input ${javaDistributor}`
-      );
+      throw new Error(`No supported distributor was found for input ${javaDistributor}`);
     }
 
     const result = await distributor.setupJava();

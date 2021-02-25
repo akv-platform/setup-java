@@ -8,11 +8,7 @@ import semver from 'semver';
 import { JavaBase } from './base-installer';
 import { IZuluVersions } from './zulu-models';
 import { IS_WINDOWS } from '../util';
-import {
-  JavaDownloadRelease,
-  JavaInstallerOptions,
-  JavaInstallerResults
-} from './base-models';
+import { JavaDownloadRelease, JavaInstallerOptions, JavaInstallerResults } from './base-models';
 
 // TO-DO: issue with 4 digits versions: 15.0.0.36 / 15.0.0+36
 
@@ -21,14 +17,12 @@ export class ZuluDistributor extends JavaBase {
     super('Zulu', initOptions);
   }
 
-  protected async findPackageForDownload(
-    version: semver.Range
-  ): Promise<JavaDownloadRelease> {
+  protected async findPackageForDownload(version: semver.Range): Promise<JavaDownloadRelease> {
     const availableVersions = await this.getAvailableVersions();
 
     const zuluVersions = availableVersions.map(item => {
       return {
-        resolvedVersion: semver.coerce(item.jdk_version.join('.')) ?? '',
+        resolvedVersion: semver.coerce(item.jdk_version.join('.'))?.version ?? '',
         link: item.url
       } as JavaDownloadRelease;
     });
@@ -38,13 +32,9 @@ export class ZuluDistributor extends JavaBase {
       zuluVersions.map(item => item.resolvedVersion),
       version
     );
-    const resolvedVersion = zuluVersions.find(
-      item => item.resolvedVersion === maxSatisfiedVersion
-    );
+    const resolvedVersion = zuluVersions.find(item => item.resolvedVersion === maxSatisfiedVersion);
     if (!resolvedVersion) {
-      const availableOptions = zuluVersions
-        ?.map(item => item.resolvedVersion)
-        .join(', ');
+      const availableOptions = zuluVersions?.map(item => item.resolvedVersion).join(', ');
       const availableOptionsMessage = availableOptions
         ? `\nAvailable versions: ${availableOptions}`
         : '';
@@ -56,9 +46,7 @@ export class ZuluDistributor extends JavaBase {
     return resolvedVersion;
   }
 
-  protected async downloadTool(
-    javaRelease: JavaDownloadRelease
-  ): Promise<JavaInstallerResults> {
+  protected async downloadTool(javaRelease: JavaDownloadRelease): Promise<JavaInstallerResults> {
     let extractedJavaPath: string;
 
     core.info(
@@ -110,16 +98,13 @@ export class ZuluDistributor extends JavaBase {
     ]
       .filter(Boolean)
       .join('&');
-    
+
     const availableVersionsUrl = `https://api.azul.com/zulu/download/community/v1.0/bundles/?${requestArguments}`;
-    const availableVersions = (
-      await this.http.getJson<Array<IZuluVersions>>(availableVersionsUrl)
-    ).result;
+    const availableVersions = (await this.http.getJson<Array<IZuluVersions>>(availableVersionsUrl))
+      .result;
 
     if (!availableVersions || availableVersions.length === 0) {
-      throw new Error(
-        `No versions were found using url '${availableVersionsUrl}'`
-      );
+      throw new Error(`No versions were found using url '${availableVersionsUrl}'`);
     }
 
     // TO-DO: Debug information, should be removed before release
