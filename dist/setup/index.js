@@ -13373,12 +13373,6 @@ class AdoptOpenJDKDistributor extends base_installer_1.JavaBase {
                 try {
                     console.log(page_index);
                     const requestArguments = [
-                        `os=${platform}`,
-                        `architecture=${arch}`,
-                        `image_type=${imageType}`,
-                        'heap_size=normal',
-                        'jvm_impl=hotspot',
-                        'project=jdk',
                         'vendor=adoptopenjdk',
                         'sort_method=DEFAULT',
                         'sort_order=DESC',
@@ -13394,6 +13388,7 @@ class AdoptOpenJDKDistributor extends base_installer_1.JavaBase {
                     }
                 }
                 catch (error) {
+                    console.log('ERROR:');
                     console.log(error);
                     break;
                     // there is no way to determine the count of pages for pagination so waiting for 404 error
