@@ -13382,6 +13382,7 @@ class AdoptOpenJDKDistributor extends base_installer_1.JavaBase {
                     'vendor=adoptopenjdk',
                     'sort_method=DEFAULT',
                     'sort_order=DESC',
+                    'release_type=ga',
                     'page_size=20',
                     `page=${page_index}`
                 ]
