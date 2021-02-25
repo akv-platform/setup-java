@@ -78,7 +78,7 @@ export class ZuluDistributor extends JavaBase {
     const [bundleType, features] = this.javaPackage.split('+');
     const platform = this.getPlatformOption();
     const extension = IS_WINDOWS ? 'zip' : 'tar.gz';
-    const javafx = features?.includes('fx');
+    const javafx = features?.includes('fx') ?? false;
 
     // TO-DO: Remove after updating README
     // java-package field supports features for Azul

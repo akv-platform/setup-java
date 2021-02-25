@@ -13378,7 +13378,6 @@ class AdoptOpenJDKDistributor extends base_installer_1.JavaBase {
             let page_index = 0;
             const availableVersions = [];
             while (true) {
-                console.log(page_index);
                 const requestArguments = `${baseRequestArguments}&page_size=20&page=${page_index}`;
                 const availableVersionsUrl = `https://api.adoptopenjdk.net/v3/assets/version/${encodedVersionRange}?${requestArguments}`;
                 const paginationPage = (yield this.http.getJson(availableVersionsUrl)).result;
@@ -33117,9 +33116,11 @@ function run() {
                 throw new Error(`No supported distributor was found for input ${javaDistributor}`);
             }
             const result = yield distributor.setupJava();
-            core.info(`Java distributor: ${javaDistributor}`);
-            core.info(`Java version: ${result.javaVersion}`);
-            core.info(`Java path: ${result.javaPath}`);
+            core.info(`Java configuration:`);
+            core.info(`  Java distributor: ${javaDistributor}`);
+            core.info(`  Java version: ${result.javaVersion}`);
+            core.info(`  Java path: ${result.javaPath}`);
+            core.info(``);
             const matchersPath = path.join(__dirname, '..', '..', '.github');
             core.info(`##[add-matcher]${path.join(matchersPath, 'java.json')}`);
             yield configureAuthentication();
@@ -38668,12 +38669,13 @@ class ZuluDistributor extends base_installer_1.JavaBase {
         });
     }
     getAvailableVersions() {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const { arch, hw_bitness, abi } = this.getArchitectureOptions();
             const [bundleType, features] = this.javaPackage.split('+');
             const platform = this.getPlatformOption();
             const extension = util_1.IS_WINDOWS ? 'zip' : 'tar.gz';
-            const javafx = features === null || features === void 0 ? void 0 : features.includes('fx');
+            const javafx = (_a = features === null || features === void 0 ? void 0 : features.includes('fx')) !== null && _a !== void 0 ? _a : false;
             // TO-DO: Remove after updating README
             // java-package field supports features for Azul
             // if you specify 'jdk+fx', 'fx' will be passed to features

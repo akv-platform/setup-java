@@ -106,7 +106,6 @@ export class AdoptOpenJDKDistributor extends JavaBase {
     let page_index = 0;
     const availableVersions: IAdoptAvailableVersions[] = [];
     while (true) {
-      console.log(page_index);
       const requestArguments = `${baseRequestArguments}&page_size=20&page=${page_index}`;
       const availableVersionsUrl = `https://api.adoptopenjdk.net/v3/assets/version/${encodedVersionRange}?${requestArguments}`;
 
