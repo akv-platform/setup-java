@@ -90,6 +90,7 @@ export class ZuluDistributor extends JavaBase {
     const [bundleType, features] = this.javaPackage.split('+');
     const platform = this.getPlatformOption();
     const extension = IS_WINDOWS ? 'zip' : 'tar.gz';
+    const javafx = features?.includes('fx');
 
     // TO-DO: Remove after updating README
     // java-package field supports features for Azul
@@ -101,6 +102,7 @@ export class ZuluDistributor extends JavaBase {
       `os=${platform}`,
       `ext=${extension}`,
       `bundle_type=${bundleType}`,
+      `javafx=${javafx}`,
       `arch=${arch}`,
       `hw_bitness=${hw_bitness}`,
       abi ? `abi=${abi}` : null,
@@ -123,7 +125,7 @@ export class ZuluDistributor extends JavaBase {
     // TO-DO: Debug information, should be removed before release
     core.startGroup('Print debug information about available versions');
     console.timeEnd('azul-retrieve-available-versions');
-    console.log('Available versions:');
+    console.log(`Available versions: [${availableVersions.length}]`);
     console.log(availableVersions.map(item => item.jdk_version.join('.')).join(', '));
     core.endGroup();
     core.startGroup('Print detailed debug information about available versions');
