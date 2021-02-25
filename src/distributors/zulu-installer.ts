@@ -121,6 +121,11 @@ export class ZuluDistributor extends JavaBase {
       );
     }
 
+    console.log(availableVersions.length);
+    availableVersions.forEach(item => {
+      console.log(item.jdk_version.join('.'));
+    });
+
     return availableVersions;
   }
 

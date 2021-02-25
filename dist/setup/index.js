@@ -38724,6 +38724,10 @@ class ZuluDistributor extends base_installer_1.JavaBase {
             if (!availableVersions || availableVersions.length === 0) {
                 throw new Error(`No versions were found using url '${availableVersionsUrl}'`);
             }
+            console.log(availableVersions.length);
+            availableVersions.forEach(item => {
+                console.log(item.jdk_version.join('.'));
+            });
             return availableVersions;
         });
     }
