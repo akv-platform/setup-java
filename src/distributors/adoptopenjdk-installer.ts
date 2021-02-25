@@ -127,7 +127,7 @@ export class AdoptOpenJDKDistributor extends JavaBase {
       try {
         const availableVersionsList = (
           await this.http.getJson<any>(availableVersionsUrl)
-        ).result.versions as any[];
+        ).result as any[];
         if (availableVersionsList) {
           results.push(...availableVersionsList);
         }
