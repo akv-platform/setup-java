@@ -35,11 +35,12 @@ async function run() {
 
     const result = await distributor.setupJava();
 
-    core.info(`Java configuration:`);
+    core.info('');
+    core.info('Java configuration:');
     core.info(`  Java distributor: ${javaDistributor}`);
     core.info(`  Java version: ${result.javaVersion}`);
     core.info(`  Java path: ${result.javaPath}`);
-    core.info(``);
+    core.info('');
 
     const matchersPath = path.join(__dirname, '..', '..', '.github');
     core.info(`##[add-matcher]${path.join(matchersPath, 'java.json')}`);
