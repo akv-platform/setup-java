@@ -40,7 +40,9 @@ export class AdoptOpenJDKDistributor extends JavaBase {
       'sort_order=DESC',
       'page=0',
       'page_size=20'
-    ].filter(Boolean).join('&');
+    ]
+      .filter(Boolean)
+      .join('&');
 
     const availableVersionsUrl = `https://api.adoptopenjdk.net/v3/assets/feature_releases/${resolvedMajorVersion}/ga?${requestArguments}`;
     const availableVersionsList = (
@@ -145,9 +147,12 @@ export class AdoptOpenJDKDistributor extends JavaBase {
   private getPlatformOption(): string {
     // Adopt has own platform names so need to map them
     switch (process.platform) {
-      case 'darwin': return 'mac';
-      case 'win32': return 'windows';
-      default: return process.platform;
+      case 'darwin':
+        return 'mac';
+      case 'win32':
+        return 'windows';
+      default:
+        return process.platform;
     }
   }
 }

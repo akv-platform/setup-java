@@ -32,8 +32,13 @@ export class ZuluDistributor extends JavaBase {
     });
 
     // TO-DO: need to sort by Zulu version after sorting by JDK version?
-    const maxSatisfiedVersion = semver.maxSatisfying(zuluVersions.map(item => item.resolvedVersion), version);
-    const resolvedVersion = zuluVersions.find(item => item.resolvedVersion === maxSatisfiedVersion);
+    const maxSatisfiedVersion = semver.maxSatisfying(
+      zuluVersions.map(item => item.resolvedVersion),
+      version
+    );
+    const resolvedVersion = zuluVersions.find(
+      item => item.resolvedVersion === maxSatisfiedVersion
+    );
     if (!resolvedVersion) {
       const availableOptions = zuluVersions
         ?.map(item => item.resolvedVersion)
@@ -88,7 +93,6 @@ export class ZuluDistributor extends JavaBase {
     // java-package field supports features for Azul
     // if you specify 'jdk+fx', 'fx' will be passed to features
     // any number of features can be specified with comma
-    
 
     // TO-DO: Consider adding '&jdk_version=11' argument to speed up request
 
@@ -100,10 +104,12 @@ export class ZuluDistributor extends JavaBase {
       `hw_bitness=${hw_bitness}`,
       abi ? `abi=${abi}` : null,
       features ? `features=${features}` : null
-    ].filter(Boolean).join('&');
+    ]
+      .filter(Boolean)
+      .join('&');
 
     const availableVersionsUrl = `https://api.azul.com/zulu/download/community/v1.0/bundles/?${requestArguments}`;
-    const availableVersions =  (
+    const availableVersions = (
       await this.http.getJson<Array<IZuluVersions>>(availableVersionsUrl)
     ).result;
 
@@ -116,11 +122,15 @@ export class ZuluDistributor extends JavaBase {
     return availableVersions;
   }
 
-  private getArchitectureOptions(): { arch: string, hw_bitness: string, abi: string} {
+  private getArchitectureOptions(): {
+    arch: string;
+    hw_bitness: string;
+    abi: string;
+  } {
     if (this.architecture == 'x64') {
-      return { arch: 'x86', hw_bitness: '64', abi: ''};
-    } else if (this.architecture == "x86") {
-      return { arch: 'x86', hw_bitness: '32', abi: ''};
+      return { arch: 'x86', hw_bitness: '64', abi: '' };
+    } else if (this.architecture == 'x86') {
+      return { arch: 'x86', hw_bitness: '32', abi: '' };
     } else {
       // TO-DO: Remove after updating README
       // support for custom architectures
@@ -136,9 +146,12 @@ export class ZuluDistributor extends JavaBase {
   private getPlatformOption(): string {
     // Azul has own platform names so need to map them
     switch (process.platform) {
-      case 'darwin': return 'macos';
-      case 'win32': return 'windows';
-      default: return process.platform;
+      case 'darwin':
+        return 'macos';
+      case 'win32':
+        return 'windows';
+      default:
+        return process.platform;
     }
   }
 }
