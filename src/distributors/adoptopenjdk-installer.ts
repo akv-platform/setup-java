@@ -130,6 +130,7 @@ export class AdoptOpenJDKDistributor extends JavaBase {
         break;
         // there is no way to determine the count of pages for pagination so waiting for 404 error
       }
+      page_index++;
     }
 
     return results;

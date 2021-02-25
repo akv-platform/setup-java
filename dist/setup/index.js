@@ -13393,6 +13393,7 @@ class AdoptOpenJDKDistributor extends base_installer_1.JavaBase {
                     break;
                     // there is no way to determine the count of pages for pagination so waiting for 404 error
                 }
+                page_index++;
             }
             return results;
         });
