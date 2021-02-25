@@ -119,8 +119,8 @@ export class AdoptOpenJDKDistributor extends JavaBase {
 
         const availableVersionsUrl = `https://api.adoptopenjdk.net/v3/info/release_versions?${requestArguments}`;
         const availableVersionsList = (
-          await this.http.getJson<any[]>(availableVersionsUrl)
-        ).result;
+          await this.http.getJson<any>(availableVersionsUrl)
+        ).result.versions as any[];
         if (availableVersionsList) {
           results.push(...availableVersionsList);
         }

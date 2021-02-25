@@ -13382,7 +13382,7 @@ class AdoptOpenJDKDistributor extends base_installer_1.JavaBase {
                         .filter(Boolean)
                         .join('&');
                     const availableVersionsUrl = `https://api.adoptopenjdk.net/v3/info/release_versions?${requestArguments}`;
-                    const availableVersionsList = (yield this.http.getJson(availableVersionsUrl)).result;
+                    const availableVersionsList = (yield this.http.getJson(availableVersionsUrl)).result.versions;
                     if (availableVersionsList) {
                         results.push(...availableVersionsList);
                     }
