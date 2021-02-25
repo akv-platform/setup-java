@@ -38650,6 +38650,7 @@ const fs_1 = __importDefault(__webpack_require__(747));
 const semver_1 = __importDefault(__webpack_require__(280));
 const base_installer_1 = __webpack_require__(534);
 const util_1 = __webpack_require__(322);
+// TO-DO: issue with 4 digits versions: 15.0.0.36 / 15.0.0+36
 class ZuluDistributor extends base_installer_1.JavaBase {
     constructor(initOptions) {
         super('Zulu', initOptions);
@@ -38705,8 +38706,7 @@ class ZuluDistributor extends base_installer_1.JavaBase {
             // java-package field supports features for Azul
             // if you specify 'jdk+fx', 'fx' will be passed to features
             // any number of features can be specified with comma
-            // TO-DO: Consider adding '&jdk_version=11' argument to speed up request
-            console.time('azul-test');
+            console.time('azul-retrieve-available-versions');
             const requestArguments = [
                 `os=${platform}`,
                 `ext=${extension}`,
@@ -38720,14 +38720,20 @@ class ZuluDistributor extends base_installer_1.JavaBase {
                 .join('&');
             const availableVersionsUrl = `https://api.azul.com/zulu/download/community/v1.0/bundles/?${requestArguments}`;
             const availableVersions = (yield this.http.getJson(availableVersionsUrl)).result;
-            console.timeEnd('azul-test');
             if (!availableVersions || availableVersions.length === 0) {
                 throw new Error(`No versions were found using url '${availableVersionsUrl}'`);
             }
-            console.log(availableVersions.length);
+            // TO-DO: Debug information, should be removed before release
+            core.startGroup('Print debug information about available versions');
+            console.timeEnd('azul-retrieve-available-versions');
+            console.log('Available versions:');
+            console.log(availableVersions.map(item => item.jdk_version.join('.')).join(', '));
+            core.endGroup();
+            core.startGroup('Print detailed debug information about available versions');
             availableVersions.forEach(item => {
-                console.log(item.jdk_version.join('.'));
+                console.log(JSON.stringify(item));
             });
+            core.endGroup();
             return availableVersions;
         });
     }

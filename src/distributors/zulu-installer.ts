@@ -14,6 +14,8 @@ import {
   JavaInstallerResults
 } from './base-models';
 
+// TO-DO: issue with 4 digits versions: 15.0.0.36 / 15.0.0+36
+
 export class ZuluDistributor extends JavaBase {
   constructor(initOptions: JavaInstallerOptions) {
     super('Zulu', initOptions);
@@ -94,9 +96,7 @@ export class ZuluDistributor extends JavaBase {
     // if you specify 'jdk+fx', 'fx' will be passed to features
     // any number of features can be specified with comma
 
-    // TO-DO: Consider adding '&jdk_version=11' argument to speed up request
-
-    console.time('azul-test');
+    console.time('azul-retrieve-available-versions');
     const requestArguments = [
       `os=${platform}`,
       `ext=${extension}`,
@@ -108,12 +108,11 @@ export class ZuluDistributor extends JavaBase {
     ]
       .filter(Boolean)
       .join('&');
-
+    
     const availableVersionsUrl = `https://api.azul.com/zulu/download/community/v1.0/bundles/?${requestArguments}`;
     const availableVersions = (
       await this.http.getJson<Array<IZuluVersions>>(availableVersionsUrl)
     ).result;
-    console.timeEnd('azul-test');
 
     if (!availableVersions || availableVersions.length === 0) {
       throw new Error(
@@ -121,10 +120,17 @@ export class ZuluDistributor extends JavaBase {
       );
     }
 
-    console.log(availableVersions.length);
+    // TO-DO: Debug information, should be removed before release
+    core.startGroup('Print debug information about available versions');
+    console.timeEnd('azul-retrieve-available-versions');
+    console.log('Available versions:');
+    console.log(availableVersions.map(item => item.jdk_version.join('.')).join(', '));
+    core.endGroup();
+    core.startGroup('Print detailed debug information about available versions');
     availableVersions.forEach(item => {
-      console.log(item.jdk_version.join('.'));
+      console.log(JSON.stringify(item));
     });
+    core.endGroup();
 
     return availableVersions;
   }
