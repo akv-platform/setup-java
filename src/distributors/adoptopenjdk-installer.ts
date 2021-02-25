@@ -106,25 +106,25 @@ export class AdoptOpenJDKDistributor extends JavaBase {
     let page_index = 0;
     const results: any[] = [];
     while (true) {
-      try {
-        console.log(page_index);
-        const requestArguments = [
-          `architecture=${arch}`,
-          `heap_size=normal`,
-          `image_type=${imageType}`,
-          `jvm_impl=hotspot`,
-          `os=${platform}`,
-          `project=jdk`,
-          'vendor=adoptopenjdk',
-          'sort_method=DEFAULT',
-          'sort_order=DESC',
-          'page_size=20',
-          `page=${page_index}`
-        ]
-          .filter(Boolean)
-          .join('&');
+      console.log(page_index);
+      const requestArguments = [
+        `architecture=${arch}`,
+        `heap_size=normal`,
+        `image_type=${imageType}`,
+        `jvm_impl=hotspot`,
+        `os=${platform}`,
+        `project=jdk`,
+        'vendor=adoptopenjdk',
+        'sort_method=DEFAULT',
+        'sort_order=DESC',
+        'page_size=20',
+        `page=${page_index}`
+      ]
+        .filter(Boolean)
+        .join('&');
+      const availableVersionsUrl = `https://api.adoptopenjdk.net/v3/assets/version/%5B1.0,100.0%5D?${requestArguments}`;
 
-        const availableVersionsUrl = `https://api.adoptopenjdk.net/v3/assets/version/[1.0,100.0]?${requestArguments}`;
+      try {
         const availableVersionsList = (
           await this.http.getJson<any>(availableVersionsUrl)
         ).result.versions as any[];
@@ -133,6 +133,7 @@ export class AdoptOpenJDKDistributor extends JavaBase {
         }
       } catch (error) {
         console.log('ERROR:');
+        console.log(availableVersionsUrl);
         console.log(error);
         break;
         // there is no way to determine the count of pages for pagination so waiting for 404 error

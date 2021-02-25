@@ -13371,24 +13371,24 @@ class AdoptOpenJDKDistributor extends base_installer_1.JavaBase {
             let page_index = 0;
             const results = [];
             while (true) {
+                console.log(page_index);
+                const requestArguments = [
+                    `architecture=${arch}`,
+                    `heap_size=normal`,
+                    `image_type=${imageType}`,
+                    `jvm_impl=hotspot`,
+                    `os=${platform}`,
+                    `project=jdk`,
+                    'vendor=adoptopenjdk',
+                    'sort_method=DEFAULT',
+                    'sort_order=DESC',
+                    'page_size=20',
+                    `page=${page_index}`
+                ]
+                    .filter(Boolean)
+                    .join('&');
+                const availableVersionsUrl = `https://api.adoptopenjdk.net/v3/assets/version/%5B1.0,100.0%5D?${requestArguments}`;
                 try {
-                    console.log(page_index);
-                    const requestArguments = [
-                        `architecture=${arch}`,
-                        `heap_size=normal`,
-                        `image_type=${imageType}`,
-                        `jvm_impl=hotspot`,
-                        `os=${platform}`,
-                        `project=jdk`,
-                        'vendor=adoptopenjdk',
-                        'sort_method=DEFAULT',
-                        'sort_order=DESC',
-                        'page_size=20',
-                        `page=${page_index}`
-                    ]
-                        .filter(Boolean)
-                        .join('&');
-                    const availableVersionsUrl = `https://api.adoptopenjdk.net/v3/assets/version/[1.0,100.0]?${requestArguments}`;
                     const availableVersionsList = (yield this.http.getJson(availableVersionsUrl)).result.versions;
                     if (availableVersionsList) {
                         results.push(...availableVersionsList);
@@ -13396,6 +13396,7 @@ class AdoptOpenJDKDistributor extends base_installer_1.JavaBase {
                 }
                 catch (error) {
                     console.log('ERROR:');
+                    console.log(availableVersionsUrl);
                     console.log(error);
                     break;
                     // there is no way to determine the count of pages for pagination so waiting for 404 error
