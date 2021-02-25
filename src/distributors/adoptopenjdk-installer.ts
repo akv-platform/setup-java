@@ -22,39 +22,28 @@ export class AdoptOpenJDKDistributor extends JavaBase {
   protected async findPackageForDownload(
     version: semver.Range
   ): Promise<JavaDownloadRelease> {
-    const platform = this.getPlatformOption();
-    const arch = this.architecture;
-    const imageType = this.javaPackage;
-
+    console.time('adopt-major-version-test');
     const resolvedMajorVersion = await this.resolveMajorVersion(version);
+    console.timeEnd('adopt-major-version-test');
 
-    const requestArguments = [
-      `os=${platform}`,
-      `architecture=${arch}`,
-      `image_type=${imageType}`,
-      'heap_size=normal',
-      'jvm_impl=hotspot',
-      'project=jdk',
-      'vendor=adoptopenjdk',
-      'sort_method=DEFAULT',
-      'sort_order=DESC',
-      'page=0',
-      'page_size=20'
-    ]
-      .filter(Boolean)
-      .join('&');
+    console.time('adopt-available-version-test');
+    const availableVersions = await this.getAvailableVersions(
+      resolvedMajorVersion
+    );
+    console.timeEnd('adopt-available-version-test');
 
-    const availableVersionsUrl = `https://api.adoptopenjdk.net/v3/assets/feature_releases/${resolvedMajorVersion}/ga?${requestArguments}`;
-    const availableVersionsList = (
-      await this.http.getJson<IRelease[]>(availableVersionsUrl)
-    ).result;
-    const resolvedFullVersion = availableVersionsList?.find(item =>
+    availableVersions.forEach(ver => {
+      const item = ver as any;
+      item.binaries = [];
+      console.log(JSON.stringify(item, null, 2));
+    });
+    const resolvedFullVersion = availableVersions.find(item =>
       semver.satisfies(item.version_data.semver, version)
     );
 
     if (!resolvedFullVersion) {
-      const availableOptions = availableVersionsList
-        ?.map(item => item.version_data.semver)
+      const availableOptions = availableVersions
+        .map(item => item.version_data.semver)
         .join(', ');
       const availableOptionsMessage = availableOptions
         ? `\nAvailable versions: ${availableOptions}`
@@ -108,6 +97,50 @@ export class AdoptOpenJDKDistributor extends JavaBase {
     }
 
     return { javaPath, javaVersion: javaRelease.resolvedVersion };
+  }
+
+  private async getAvailableVersions(
+    majorVersion: number
+  ): Promise<IRelease[]> {
+    const platform = this.getPlatformOption();
+    const arch = this.architecture;
+    const imageType = this.javaPackage;
+
+    let page_index = 0;
+    const results: IRelease[] = [];
+    while (true) {
+      try {
+        const requestArguments = [
+          `os=${platform}`,
+          `architecture=${arch}`,
+          `image_type=${imageType}`,
+          'heap_size=normal',
+          'jvm_impl=hotspot',
+          'project=jdk',
+          'vendor=adoptopenjdk',
+          'sort_method=DEFAULT',
+          'sort_order=DESC',
+          'page_size=20',
+          `page=${page_index}`
+        ]
+          .filter(Boolean)
+          .join('&');
+
+        const availableVersionsUrl = `https://api.adoptopenjdk.net/v3/assets/feature_releases/${majorVersion}/ga?${requestArguments}`;
+        const availableVersionsList = (
+          await this.http.getJson<IRelease[]>(availableVersionsUrl)
+        ).result;
+        if (availableVersionsList) {
+          results.push(...availableVersionsList);
+        }
+      } catch (error) {
+        console.log(error);
+        break;
+        // there is no way to determine the count of pages for pagination so waiting for 404 error
+      }
+    }
+
+    return results;
   }
 
   private async resolveMajorVersion(range: semver.Range) {

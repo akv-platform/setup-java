@@ -96,6 +96,7 @@ export class ZuluDistributor extends JavaBase {
 
     // TO-DO: Consider adding '&jdk_version=11' argument to speed up request
 
+    console.time('azul-test');
     const requestArguments = [
       `os=${platform}`,
       `ext=${extension}`,
@@ -112,6 +113,7 @@ export class ZuluDistributor extends JavaBase {
     const availableVersions = (
       await this.http.getJson<Array<IZuluVersions>>(availableVersionsUrl)
     ).result;
+    console.timeEnd('azul-test');
 
     if (!availableVersions || availableVersions.length === 0) {
       throw new Error(
