@@ -22,14 +22,12 @@ export class AdoptOpenJDKDistributor extends JavaBase {
   protected async findPackageForDownload(
     version: semver.Range
   ): Promise<JavaDownloadRelease> {
-    console.time('adopt-major-version-test');
-    const resolvedMajorVersion = await this.resolveMajorVersion(version);
-    console.timeEnd('adopt-major-version-test');
+    //console.time('adopt-major-version-test');
+    //const resolvedMajorVersion = await this.resolveMajorVersion(version);
+    //console.timeEnd('adopt-major-version-test');
 
     console.time('adopt-available-version-test');
-    const availableVersions = await this.getAvailableVersions(
-      resolvedMajorVersion
-    );
+    const availableVersions = await this.getAvailableVersions();
     console.timeEnd('adopt-available-version-test');
 
     availableVersions.forEach(ver => {
@@ -99,15 +97,13 @@ export class AdoptOpenJDKDistributor extends JavaBase {
     return { javaPath, javaVersion: javaRelease.resolvedVersion };
   }
 
-  private async getAvailableVersions(
-    majorVersion: number
-  ): Promise<IRelease[]> {
+  private async getAvailableVersions(): Promise<any[]> {
     const platform = this.getPlatformOption();
     const arch = this.architecture;
     const imageType = this.javaPackage;
 
     let page_index = 0;
-    const results: IRelease[] = [];
+    const results: any[] = [];
     while (true) {
       try {
         console.log(page_index);
@@ -129,7 +125,7 @@ export class AdoptOpenJDKDistributor extends JavaBase {
 
         const availableVersionsUrl = `https://api.adoptopenjdk.net/v3/info/release_versions?${requestArguments}`;
         const availableVersionsList = (
-          await this.http.getJson<IRelease[]>(availableVersionsUrl)
+          await this.http.getJson<any[]>(availableVersionsUrl)
         ).result;
         if (availableVersionsList) {
           results.push(...availableVersionsList);

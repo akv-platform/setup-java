@@ -13308,11 +13308,11 @@ class AdoptOpenJDKDistributor extends base_installer_1.JavaBase {
     }
     findPackageForDownload(version) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.time('adopt-major-version-test');
-            const resolvedMajorVersion = yield this.resolveMajorVersion(version);
-            console.timeEnd('adopt-major-version-test');
+            //console.time('adopt-major-version-test');
+            //const resolvedMajorVersion = await this.resolveMajorVersion(version);
+            //console.timeEnd('adopt-major-version-test');
             console.time('adopt-available-version-test');
-            const availableVersions = yield this.getAvailableVersions(resolvedMajorVersion);
+            const availableVersions = yield this.getAvailableVersions();
             console.timeEnd('adopt-available-version-test');
             availableVersions.forEach(ver => {
                 const item = ver;
@@ -13362,7 +13362,7 @@ class AdoptOpenJDKDistributor extends base_installer_1.JavaBase {
             return { javaPath, javaVersion: javaRelease.resolvedVersion };
         });
     }
-    getAvailableVersions(majorVersion) {
+    getAvailableVersions() {
         return __awaiter(this, void 0, void 0, function* () {
             const platform = this.getPlatformOption();
             const arch = this.architecture;
