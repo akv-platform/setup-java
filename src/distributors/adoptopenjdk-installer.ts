@@ -35,7 +35,7 @@ export class AdoptOpenJDKDistributor extends JavaBase {
     availableVersions.forEach(ver => {
       const item = ver as any;
       item.binaries = [];
-      console.log(JSON.stringify(item, null, 2));
+      console.log(JSON.stringify(item));
     });
     const resolvedFullVersion = availableVersions.find(item =>
       semver.satisfies(item.version_data.semver, version)
@@ -110,6 +110,7 @@ export class AdoptOpenJDKDistributor extends JavaBase {
     const results: IRelease[] = [];
     while (true) {
       try {
+        console.log(page_index);
         const requestArguments = [
           `os=${platform}`,
           `architecture=${arch}`,
@@ -126,7 +127,7 @@ export class AdoptOpenJDKDistributor extends JavaBase {
           .filter(Boolean)
           .join('&');
 
-        const availableVersionsUrl = `https://api.adoptopenjdk.net/v3/assets/feature_releases/${majorVersion}/ga?${requestArguments}`;
+        const availableVersionsUrl = `https://api.adoptopenjdk.net/v3/info/release_versions?${requestArguments}`;
         const availableVersionsList = (
           await this.http.getJson<IRelease[]>(availableVersionsUrl)
         ).result;

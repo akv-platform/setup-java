@@ -13317,7 +13317,7 @@ class AdoptOpenJDKDistributor extends base_installer_1.JavaBase {
             availableVersions.forEach(ver => {
                 const item = ver;
                 item.binaries = [];
-                console.log(JSON.stringify(item, null, 2));
+                console.log(JSON.stringify(item));
             });
             const resolvedFullVersion = availableVersions.find(item => semver_1.default.satisfies(item.version_data.semver, version));
             if (!resolvedFullVersion) {
@@ -13371,6 +13371,7 @@ class AdoptOpenJDKDistributor extends base_installer_1.JavaBase {
             const results = [];
             while (true) {
                 try {
+                    console.log(page_index);
                     const requestArguments = [
                         `os=${platform}`,
                         `architecture=${arch}`,
@@ -13386,7 +13387,7 @@ class AdoptOpenJDKDistributor extends base_installer_1.JavaBase {
                     ]
                         .filter(Boolean)
                         .join('&');
-                    const availableVersionsUrl = `https://api.adoptopenjdk.net/v3/assets/feature_releases/${majorVersion}/ga?${requestArguments}`;
+                    const availableVersionsUrl = `https://api.adoptopenjdk.net/v3/info/release_versions?${requestArguments}`;
                     const availableVersionsList = (yield this.http.getJson(availableVersionsUrl)).result;
                     if (availableVersionsList) {
                         results.push(...availableVersionsList);
