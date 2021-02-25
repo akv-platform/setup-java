@@ -37,7 +37,9 @@ export class AdoptOpenJDKDistributor extends JavaBase {
       'project=jdk',
       'vendor=adoptopenjdk',
       'sort_method=DEFAULT',
-      'sort_order=DESC'
+      'sort_order=DESC',
+      'page=0',
+      'page_size=20'
     ].filter(Boolean).join('&');
 
     const availableVersionsUrl = `https://api.adoptopenjdk.net/v3/assets/feature_releases/${resolvedMajorVersion}/ga?${requestArguments}`;
