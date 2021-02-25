@@ -57,8 +57,6 @@ export abstract class JavaBase {
   }
 
   protected get toolcacheFolderName(): string {
-    // TO-DO: compare with other tools to check if it should be:
-    // `Java_${this.distributor}_${this.javaPackage}` vs `java_${this.distributor}_${this.javaPackage}`;
     return `Java_${this.distributor}_${this.javaPackage}`;
   }
 

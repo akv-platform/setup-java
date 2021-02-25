@@ -31,6 +31,7 @@ export class ZuluDistributor extends JavaBase {
       } as JavaDownloadRelease;
     });
 
+    // TO-DO: need to sort by Zulu version after sorting by JDK version?
     const maxSatisfiedVersion = semver.maxSatisfying(zuluVersions.map(item => item.resolvedVersion), version);
     const resolvedVersion = zuluVersions.find(item => item.resolvedVersion === maxSatisfiedVersion);
     if (!resolvedVersion) {
@@ -126,7 +127,7 @@ export class ZuluDistributor extends JavaBase {
       // on Hosted images we have only x64 and x86, we should always specify arch as x86 and hw_bitness depends on arch
       // on Self-Hosted, there are additional architectures and it is characterized by a few fields: arch, hw_bitness, abi
       // allow customer to specify every parameter by providing arch in format: '<arch>+<hw_bitness>+<abi>'
-      // examples: 'x86+32+hard_float', 'x86+64+soft_float'
+      // examples: 'x86+32+hard_float', 'arm+64+soft_float'
       const [arch, hw_bitness, abi] = this.architecture.split('+');
       return { arch, hw_bitness, abi };
     }

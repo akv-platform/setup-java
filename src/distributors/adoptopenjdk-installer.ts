@@ -28,7 +28,7 @@ export class AdoptOpenJDKDistributor extends JavaBase {
 
     const resolvedMajorVersion = await this.resolveMajorVersion(version);
 
-    const queryArguments = [
+    const requestArguments = [
       `os=${platform}`,
       `architecture=${arch}`,
       `image_type=${imageType}`,
@@ -40,7 +40,7 @@ export class AdoptOpenJDKDistributor extends JavaBase {
       'sort_order=DESC'
     ].filter(Boolean).join('&');
 
-    const availableVersionsUrl = `https://api.adoptopenjdk.net/v3/assets/feature_releases/${resolvedMajorVersion}/ga?${queryArguments}`;
+    const availableVersionsUrl = `https://api.adoptopenjdk.net/v3/assets/feature_releases/${resolvedMajorVersion}/ga?${requestArguments}`;
     const availableVersionsList = (
       await this.http.getJson<IRelease[]>(availableVersionsUrl)
     ).result;
