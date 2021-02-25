@@ -13,9 +13,6 @@ jobs:
         distribution: ['adoptOpenJdk', 'zulu']
         java-package: ['jdk', 'jre']
         java:
-        - '13.x'
-        - '11.0.x'
-        - '1.8.x'
         - '8.x'
     steps:
       - name: Checkout
