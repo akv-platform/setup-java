@@ -9,19 +9,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, windows-latest, ubuntu-16.04, ubuntu-18.04, ubuntu-20.04]
+        os: [macos-latest, windows-latest, ubuntu-18.04]
         distribution: ['adoptOpenJdk', 'zulu']
         java-package: ['jdk', 'jre']
         java:
-        - '1.11.x'
-        - '1.12'
         - '13.x'
         - '11.0.x'
         - '1.8.x'
-        - '1.8'
         - '8.x'
-        - '8.0.192'
-        - 'x'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
