@@ -35,13 +35,13 @@ jobs:
         shell: bash
       - name: setup-java
         uses: ./
-        id: setup-java
+        id: setup-java2
         with:
           java-version: ${{ matrix.version }}
           java-package: 'jdk'
           distribution: ${{ matrix.distribution }}
       - name: Verify Java
-        run: bash __tests__/verify-java.sh "${{ matrix.version }}" "${{ steps.setup-java.outputs.path }}"
+        run: bash __tests__/verify-java.sh "${{ matrix.version }}" "${{ steps.setup-java2.outputs.path }}"
         shell: bash
 
 
@@ -81,13 +81,13 @@ jobs:
         shell: bash
       - name: setup-java
         uses: ./
-        id: setup-java
+        id: setup-java2
         with:
           java-version: ${{ matrix.version }}
           java-package: jdk
           distribution: ${{ matrix.distribution }}
       - name: Verify Java
-        run: bash __tests__/verify-java.sh "${{ matrix.version }}" "${{ steps.setup-java.outputs.path }}"
+        run: bash __tests__/verify-java.sh "${{ matrix.version }}" "${{ steps.setup-java2.outputs.path }}"
         shell: bash
 
   setup-java-ea-versions:
@@ -115,13 +115,13 @@ jobs:
         shell: bash
       - name: setup-java
         uses: ./
-        id: setup-java
+        id: setup-java2
         with:
           java-version: ${{ matrix.version }}
           java-package: jdk
           distribution: ${{ matrix.distribution }}
       - name: Verify Java
-        run: bash __tests__/verify-java.sh "${{ matrix.version }}" "${{ steps.setup-java.outputs.path }}"
+        run: bash __tests__/verify-java.sh "${{ matrix.version }}" "${{ steps.setup-java2.outputs.path }}"
         shell: bash
 
   setup-java-custom-package-type:
@@ -171,13 +171,13 @@ jobs:
         shell: bash
       - name: setup-java
         uses: ./
-        id: setup-java
+        id: setup-java2
         with:
           java-version: ${{ matrix.version }}
           java-package: ${{ matrix.java-package }}
           distribution: ${{ matrix.distribution }}
       - name: Verify Java
-        run: bash __tests__/verify-java.sh "${{ matrix.version }}" "${{ steps.setup-java.outputs.path }}"
+        run: bash __tests__/verify-java.sh "${{ matrix.version }}" "${{ steps.setup-java2.outputs.path }}"
         shell: bash
 
   setup-java-custom-architecture:
@@ -207,11 +207,11 @@ jobs:
 
       - name: setup-java
         uses: ./
-        id: setup-java
+        id: setup-java2
         with:
           distribution: ${{ matrix.distribution }}
           java-version: ${{ matrix.version }}
           architecture: x86
       - name: Verify Java
-        run: bash __tests__/verify-java.sh "${{ matrix.version }}" "${{ steps.setup-java.outputs.path }}"
+        run: bash __tests__/verify-java.sh "${{ matrix.version }}" "${{ steps.setup-java2.outputs.path }}"
         shell: bash
