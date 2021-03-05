@@ -11297,7 +11297,8 @@ class AdoptiumDistributor extends base_installer_1.JavaBase {
             while (true) {
                 const requestArguments = `${baseRequestArguments}&page_size=20&page=${page_index}`;
                 const availableVersionsUrl = `https://api.adoptopenjdk.net/v3/assets/version/${encodedVersionRange}?${requestArguments}`;
-                if (core.isDebug()) {
+                if (core.isDebug() && page_index === 0) {
+                    // url is identical except page_index so print it once for debug
                     core.debug(`Gathering available versions from '${availableVersionsUrl}'`);
                 }
                 const paginationPage = (yield this.http.getJson(availableVersionsUrl)).result;
@@ -11313,11 +11314,6 @@ class AdoptiumDistributor extends base_installer_1.JavaBase {
                 console.timeEnd('adopt-retrieve-available-versions');
                 console.log(`Available versions: [${availableVersions.length}]`);
                 console.log(availableVersions.map(item => item.version_data.semver).join(', '));
-                core.endGroup();
-                core.startGroup('Print full information about available versions');
-                availableVersions.forEach(item => {
-                    console.log(JSON.stringify(item));
-                });
                 core.endGroup();
             }
             return availableVersions;
@@ -39758,11 +39754,6 @@ class ZuluDistributor extends base_installer_1.JavaBase {
                 console.timeEnd('azul-retrieve-available-versions');
                 console.log(`Available versions: [${availableVersions.length}]`);
                 console.log(availableVersions.map(item => item.jdk_version.join('.')).join(', '));
-                core.endGroup();
-                core.startGroup('Print full information about available versions');
-                availableVersions.forEach(item => {
-                    console.log(JSON.stringify(item));
-                });
                 core.endGroup();
             }
             return availableVersions;
