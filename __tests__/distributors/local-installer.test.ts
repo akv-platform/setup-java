@@ -185,18 +185,11 @@ describe('setupJava', () => {
 
   it.each([
     [{ version: '8.0.289', arch: 'x64', packageType: 'jdk' }, ''],
-    [{ version: '13.0.289', arch: 'x64', packageType: 'jdk' }, ''],
-    [{ version: '16.0.289', arch: 'x64', packageType: 'jdk' }, ''],
     [{ version: '7.0.289', arch: 'x64', packageType: 'jdk' }, undefined],
-    [{ version: '11.0.289', arch: 'x64', packageType: 'jdk' }, undefined],
-    [{ version: '12.0.289', arch: 'x64', packageType: 'jdk' }, undefined],
-    [{ version: '15.0.289', arch: 'x64', packageType: 'jdk' }, undefined]
-  ])(
-    'Throw an error if jdkfile is not specified, inputs %s, jdkfile %s',
-    async (inputs, jdkFile) => {
-      mockJavaBase = new LocalDistributor(inputs, jdkFile);
-      await expect(mockJavaBase.setupJava()).rejects.toThrowError("'jdkFile' is not specified");
-      expect(spyTcFindAllVersions).toHaveBeenCalled();
-    }
-  );
+    [{ version: '11.0.289', arch: 'x64', packageType: 'jdk' }, undefined]
+  ])('Throw an error if jdkfile is not specified, inputs %s', async (inputs, jdkFile) => {
+    mockJavaBase = new LocalDistributor(inputs, jdkFile);
+    await expect(mockJavaBase.setupJava()).rejects.toThrowError("'jdkFile' is not specified");
+    expect(spyTcFindAllVersions).toHaveBeenCalled();
+  });
 });

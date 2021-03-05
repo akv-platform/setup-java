@@ -80,7 +80,7 @@ export class ZuluDistributor extends JavaBase {
       this.architecture
     );
 
-    return { version: javaRelease.version, path: javaPath, };
+    return { version: javaRelease.version, path: javaPath };
   }
 
   private async getAvailableVersions(): Promise<IZuluVersions[]> {
