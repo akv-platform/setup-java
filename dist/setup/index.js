@@ -22658,17 +22658,22 @@ class JavaBase {
         // if *-ea is provided, take only ea versions from toolcache, otherwise - only stable versions
         const availableVersions = tc
             .findAllVersions(this.toolcacheFolderName, this.architecture)
-            .filter(item => item.includes('ea') === !this.stable)
+            .filter(item => item.endsWith('-ea') === !this.stable)
             .map(item => {
             return item.replace(/-ea$/, '');
         });
+        core.info(`this.stable = ${this.stable}`);
+        core.info(`this.version = ${this.version}`);
+        core.info(JSON.stringify(availableVersions));
         const satisfiedVersions = availableVersions
             .filter(item => semver_1.default.satisfies(item, this.version))
             .sort(semver_1.default.rcompare);
         if (!satisfiedVersions || satisfiedVersions.length === 0) {
             return null;
         }
+        core.info(JSON.stringify(satisfiedVersions));
         const javaPath = tc.find(this.toolcacheFolderName, satisfiedVersions[0], this.architecture);
+        core.info(JSON.stringify(javaPath));
         if (!javaPath) {
             return null;
         }
