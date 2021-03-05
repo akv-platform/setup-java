@@ -46,17 +46,6 @@ jobs:
       - name: Verify Java version
         run: bash __tests__/verify-java.sh "11.0.10" "${{ steps.setup-java.outputs.path }}"
         shell: bash
-      - name: setup-java
-        uses: ./
-        id: setup-java2
-        with:
-          distribution: 'jdkfile'
-          jdkFile: ${{ runner.temp }}/${{ env.LocalFilename }}
-          java-version: '11.0.0-ea'
-          architecture: x64
-      - name: Verify Java version
-        run: bash __tests__/verify-java.sh "11.0.10" "${{ steps.setup-java2.outputs.path }}"
-        shell: bash
 
   setup-java-local-file-zulu:
     name: Validate installation from local file Zulu
@@ -92,15 +81,4 @@ jobs:
           architecture: x64
       - name: Verify Java version
         run: bash __tests__/verify-java.sh "11.0" "${{ steps.setup-java.outputs.path }}"
-        shell: bash
-      - name: setup-java
-        uses: ./
-        id: setup-java2
-        with:
-          distribution: 'jdkfile'
-          jdkFile: ${{ runner.temp }}/${{ env.LocalFilename }}
-          java-version: '11.0.0-ea'
-          architecture: x64
-      - name: Verify Java version
-        run: bash __tests__/verify-java.sh "11.0" "${{ steps.setup-java2.outputs.path }}"
         shell: bash
