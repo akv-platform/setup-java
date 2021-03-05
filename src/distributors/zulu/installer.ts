@@ -120,11 +120,6 @@ export class ZuluDistributor extends JavaBase {
       console.log(`Available versions: [${availableVersions.length}]`);
       console.log(availableVersions.map(item => item.jdk_version.join('.')).join(', '));
       core.endGroup();
-      core.startGroup('Print full information about available versions');
-      availableVersions.forEach(item => {
-        console.log(JSON.stringify(item));
-      });
-      core.endGroup();
     }
 
     return availableVersions;
