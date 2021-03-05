@@ -95,17 +95,17 @@ describe('findInToolcache', () => {
     ['15', '15.0.2'],
     ['x', '15.0.2'],
     ['x-ea', '17.4.4'],
-    ['14-ea', '14.3.2'],
-    ['14.2-ea', '14.2.1'],
-    ['14.2.1-ea', '14.2.1']
+    ['11-ea', '11.3.2'],
+    ['11.2-ea', '11.2.1'],
+    ['11.2.1-ea', '11.2.1']
   ])('should choose correct java from tool-cache for input %s', (input, expected) => {
     spyTcFindAllVersions.mockReturnValue([
       '17.4.4-ea',
       '11.0.2',
       '15.0.2',
       '11.0.3',
-      '14.2.1-ea',
-      '14.3.2-ea',
+      '11.2.1-ea',
+      '11.3.2-ea',
       '11.0.1'
     ]);
     spyTcFind.mockImplementation(

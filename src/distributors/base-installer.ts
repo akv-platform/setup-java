@@ -69,8 +69,6 @@ export abstract class JavaBase {
         return item.replace(/-ea$/, '');
       });
 
-    //console.log(availableVersions);
-
     const satisfiedVersions = availableVersions
       .filter(item => semver.satisfies(item, this.version))
       .sort(semver.rcompare);

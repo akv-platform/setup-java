@@ -22666,7 +22666,6 @@ class JavaBase {
             .map(item => {
             return item.replace(/-ea$/, '');
         });
-        //console.log(availableVersions);
         const satisfiedVersions = availableVersions
             .filter(item => semver_1.default.satisfies(item, this.version))
             .sort(semver_1.default.rcompare);
