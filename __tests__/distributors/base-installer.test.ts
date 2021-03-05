@@ -18,8 +18,8 @@ class EmptyJavaBase extends JavaBase {
 
   protected async downloadTool(javaRelease: JavaDownloadRelease): Promise<JavaInstallerResults> {
     return {
-      javaVersion: '11.0.8',
-      javaPath: `/toolcache/${this.toolcacheFolderName}/11.0.8`
+      version: '11.0.8',
+      path: `/toolcache/${this.toolcacheFolderName}/11.0.8/${this.architecture}`
     };
   }
 
@@ -65,15 +65,15 @@ describe('findInToolcache', () => {
   it.each([
     [
       { version: '11', arch: 'x64', packageType: 'jdk' },
-      { javaVersion: actualJavaVersion, javaPath }
+      { version: actualJavaVersion, path: javaPath }
     ],
     [
       { version: '11.1', arch: 'x64', packageType: 'jdk' },
-      { javaVersion: actualJavaVersion, javaPath }
+      { version: actualJavaVersion, path: javaPath }
     ],
     [
       { version: '11.1.10', arch: 'x64', packageType: 'jdk' },
-      { javaVersion: actualJavaVersion, javaPath }
+      { version: actualJavaVersion, path: javaPath }
     ],
     [{ version: '11', arch: 'x64', packageType: 'jre' }, null],
     [{ version: '8', arch: 'x64', packageType: 'jdk' }, null],
@@ -136,15 +136,15 @@ describe('setupJava', () => {
   it.each([
     [
       { version: '11', arch: 'x86', packageType: 'jdk' },
-      { javaVersion: actualJavaVersion, javaPath }
+      { version: actualJavaVersion, path: javaPath }
     ],
     [
       { version: '11.1', arch: 'x86', packageType: 'jdk' },
-      { javaVersion: actualJavaVersion, javaPath }
+      { version: actualJavaVersion, path: javaPath }
     ],
     [
       { version: '11.1.10', arch: 'x86', packageType: 'jdk' },
-      { javaVersion: actualJavaVersion, javaPath }
+      { version: actualJavaVersion, path: javaPath }
     ]
   ])('should find java for path %s -> %s', (input, expected) => {
     mockJavaBase = new EmptyJavaBase(input);
@@ -155,17 +155,17 @@ describe('setupJava', () => {
   it.each([
     [
       { version: '11', arch: 'x86', packageType: 'jre' },
-      { javaPath: `/toolcache/Java_Empty_jre/11.0.8`, javaVersion: '11.0.8' }
+      { path: `/toolcache/Java_Empty_jre/11.0.8/x86`, version: '11.0.8' }
     ],
     [
       { version: '11', arch: 'x64', packageType: 'jdk' },
-      { javaPath: `/toolcache/Java_Empty_jdk/11.0.8`, javaVersion: '11.0.8' }
+      { path: `/toolcache/Java_Empty_jdk/11.0.8/x64`, version: '11.0.8' }
     ],
     [
       { version: '11', arch: 'x64', packageType: 'jre' },
-      { javaPath: `/toolcache/Java_Empty_jre/11.0.8`, javaVersion: '11.0.8' }
+      { path: `/toolcache/Java_Empty_jre/11.0.8/x64`, version: '11.0.8' }
     ]
-  ])('download java with inputs %s, expcted %s', async (input, expected) => {
+  ])('download java with inputs %s, expected %s', async (input, expected) => {
     mockJavaBase = new EmptyJavaBase(input);
     await expect(mockJavaBase.setupJava()).resolves.toEqual(expected);
     expect(spyTcFind).toHaveBeenCalled();

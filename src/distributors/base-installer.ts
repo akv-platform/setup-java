@@ -32,16 +32,16 @@ export abstract class JavaBase {
   public async setupJava(): Promise<JavaInstallerResults> {
     let foundJava = this.findInToolcache();
     if (foundJava) {
-      core.info(`Resolved Java ${foundJava.javaVersion} from tool-cache`);
+      core.info(`Resolved Java ${foundJava.version} from tool-cache`);
     } else {
       core.info(`Java ${this.version.raw} is not found in tool-cache. Trying to download...`);
       const javaRelease = await this.findPackageForDownload(this.version);
       foundJava = await this.downloadTool(javaRelease);
-      core.info(`Java ${foundJava.javaVersion} was downloaded`);
+      core.info(`Java ${foundJava.version} was downloaded`);
     }
 
-    core.info(`Setting Java ${foundJava.javaVersion} as default`);
-    this.setJavaDefault(foundJava.javaPath, foundJava.javaVersion);
+    core.info(`Setting Java ${foundJava.version} as default`);
+    this.setJavaDefault(foundJava.path, foundJava.version);
 
     return foundJava;
   }
@@ -57,8 +57,8 @@ export abstract class JavaBase {
     }
 
     return {
-      javaVersion: getVersionFromToolcachePath(javaPath),
-      javaPath
+      version: getVersionFromToolcachePath(javaPath),
+      path: javaPath
     };
   }
 

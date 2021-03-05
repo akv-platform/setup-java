@@ -74,7 +74,7 @@ export class AdoptiumDistributor extends JavaBase {
       javaPath = path.join(javaPath, macOSJavaContentDir);
     }
 
-    return { javaPath, javaVersion: javaRelease.version };
+    return { version: javaRelease.version, path: javaPath };
   }
 
   private async getAvailableVersions(): Promise<IAdoptiumAvailableVersions[]> {

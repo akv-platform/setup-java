@@ -90,12 +90,11 @@ describe('setupJava', () => {
     const inputs = { version: actualJavaVersion, arch: 'x86', packageType: 'jdk' };
     const jdkFile = 'not_existing_one';
     const expected = {
-      javaVersion: actualJavaVersion,
-      javaPath: path.join('Java_jdkfile_jdk', inputs.version, inputs.arch)
+      version: actualJavaVersion,
+      path: path.join('Java_jdkfile_jdk', inputs.version, inputs.arch)
     };
 
     mockJavaBase = new LocalDistributor(inputs, jdkFile);
-    expected.javaPath = path.join('Java_jdkfile_jdk', inputs.version, inputs.arch);
     await expect(mockJavaBase.setupJava()).resolves.toEqual(expected);
     expect(spyTcFind).toHaveBeenCalled();
     expect(spyCoreInfo).toHaveBeenCalledWith(`Resolved Java ${actualJavaVersion} from tool-cache`);
@@ -108,12 +107,11 @@ describe('setupJava', () => {
     const inputs = { version: actualJavaVersion, arch: 'x86', packageType: 'jdk' };
     const jdkFile = undefined;
     const expected = {
-      javaVersion: actualJavaVersion,
-      javaPath: path.join('Java_jdkfile_jdk', inputs.version, inputs.arch)
+      version: actualJavaVersion,
+      path: path.join('Java_jdkfile_jdk', inputs.version, inputs.arch)
     };
 
     mockJavaBase = new LocalDistributor(inputs, jdkFile);
-    expected.javaPath = path.join('Java_jdkfile_jdk', inputs.version, inputs.arch);
     await expect(mockJavaBase.setupJava()).resolves.toEqual(expected);
     expect(spyTcFind).toHaveBeenCalled();
     expect(spyCoreInfo).toHaveBeenCalledWith(`Resolved Java ${actualJavaVersion} from tool-cache`);
