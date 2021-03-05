@@ -22656,8 +22656,8 @@ class JavaBase {
     findInToolcache() {
         // we can't use tc.find directly because firstly, we need to filter versions by stability
         // if *-ea is provided, take only ea versions from toolcache, otherwise - only stable versions
-        const availableVersions = tc
-            .findAllVersions(this.toolcacheFolderName, this.architecture)
+        const foundVersions = tc.findAllVersions(this.toolcacheFolderName, this.architecture);
+        const availableVersions = foundVersions
             .filter(item => item.endsWith('-ea') === !this.stable)
             .map(item => {
             return item.replace(/-ea$/, '');
