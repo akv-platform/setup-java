@@ -19,7 +19,7 @@ export class LocalDistributor extends JavaBase {
     let foundJava = this.findInToolcache();
 
     if (foundJava) {
-      core.info(`Resolved Java ${foundJava.javaVersion} from tool-cache`);
+      core.info(`Resolved Java ${foundJava.version} from tool-cache`);
     } else {
       core.info(
         `Java ${this.version.raw} is not found in tool-cache. Trying to unpack JDK file...`
@@ -56,14 +56,14 @@ export class LocalDistributor extends JavaBase {
       }
 
       foundJava = {
-        javaPath,
-        javaVersion
+        version: javaVersion,
+        path: javaPath
       };
     }
 
-    core.info(`Setting Java ${foundJava.javaVersion} as default`);
+    core.info(`Setting Java ${foundJava.version} as default`);
 
-    this.setJavaDefault(foundJava.javaPath, foundJava.javaVersion);
+    this.setJavaDefault(foundJava.version, foundJava.path);
     return foundJava;
   }
 

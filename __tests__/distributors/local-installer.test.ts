@@ -124,12 +124,11 @@ describe('setupJava', () => {
     const inputs = { version: '11.0.289', arch: 'x86', packageType: 'jdk' };
     const jdkFile = expectedJdkFile;
     const expected = {
-      javaVersion: '11.0.289',
-      javaPath: path.join('Java_jdkfile_jdk', inputs.version, inputs.arch)
+      version: '11.0.289',
+      path: path.join('Java_jdkfile_jdk', inputs.version, inputs.arch)
     };
 
     mockJavaBase = new LocalDistributor(inputs, jdkFile);
-    expected.javaPath = path.join('Java_jdkfile_jdk', inputs.version, inputs.arch);
     await expect(mockJavaBase.setupJava()).resolves.toEqual(expected);
     expect(spyTcFind).toHaveBeenCalled();
     expect(spyCoreInfo).not.toHaveBeenCalledWith(

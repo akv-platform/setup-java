@@ -41,7 +41,7 @@ export abstract class JavaBase {
     }
 
     core.info(`Setting Java ${foundJava.version} as default`);
-    this.setJavaDefault(foundJava.path, foundJava.version);
+    this.setJavaDefault(foundJava.version, foundJava.path);
 
     return foundJava;
   }
@@ -62,7 +62,7 @@ export abstract class JavaBase {
     };
   }
 
-  protected setJavaDefault(toolPath: string, version: string) {
+  protected setJavaDefault(version: string, toolPath: string) {
     core.exportVariable('JAVA_HOME', toolPath);
     core.addPath(path.join(toolPath, 'bin'));
     core.setOutput('distribution', this.distribution);
