@@ -22657,6 +22657,7 @@ class JavaBase {
         // we can't use tc.find directly because firstly, we need to filter versions by stability
         // if *-ea is provided, take only ea versions from toolcache, otherwise - only stable versions
         const foundVersions = tc.findAllVersions(this.toolcacheFolderName, this.architecture);
+        core.info(JSON.stringify(foundVersions));
         const availableVersions = foundVersions
             .filter(item => item.endsWith('-ea') === !this.stable)
             .map(item => {
