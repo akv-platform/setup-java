@@ -22294,7 +22294,7 @@ class LocalDistributor extends base_installer_1.JavaBase {
                 const archiveName = fs_1.default.readdirSync(extractedJavaPath)[0];
                 const archivePath = path_1.default.join(extractedJavaPath, archiveName);
                 const javaVersion = this.version.raw;
-                let javaPath = yield tc.cacheDir(archivePath, this.toolcacheFolderName, javaVersion, this.architecture);
+                let javaPath = yield tc.cacheDir(archivePath, this.toolcacheFolderName, this.getToolcacheVersionName(javaVersion), this.architecture);
                 if (process.platform === 'darwin' &&
                     fs_1.default.existsSync(path_1.default.join(javaPath, constants_1.macOSJavaContentDir))) {
                     javaPath = path_1.default.join(javaPath, constants_1.macOSJavaContentDir);
@@ -39722,8 +39722,7 @@ class ZuluDistributor extends base_installer_1.JavaBase {
             extractedJavaPath = yield util_1.extractJdkFile(javaArchivePath, extension);
             const archiveName = fs_1.default.readdirSync(extractedJavaPath)[0];
             const archivePath = path_1.default.join(extractedJavaPath, archiveName);
-            const version = this.getToolcacheVersionName(javaRelease.version);
-            const javaPath = yield tc.cacheDir(archivePath, this.toolcacheFolderName, version, this.architecture);
+            const javaPath = yield tc.cacheDir(archivePath, this.toolcacheFolderName, this.getToolcacheVersionName(javaRelease.version), this.architecture);
             return { version: javaRelease.version, path: javaPath };
         });
     }

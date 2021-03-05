@@ -44,7 +44,7 @@ export class LocalDistributor extends JavaBase {
       let javaPath = await tc.cacheDir(
         archivePath,
         this.toolcacheFolderName,
-        javaVersion,
+        this.getToolcacheVersionName(javaVersion),
         this.architecture
       );
 
