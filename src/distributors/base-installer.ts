@@ -62,29 +62,18 @@ export abstract class JavaBase {
   protected findInToolcache(): JavaInstallerResults | null {
     // we can't use tc.find directly because firstly, we need to filter versions by stability
     // if *-ea is provided, take only ea versions from toolcache, otherwise - only stable versions
-    const foundVersions = tc.findAllVersions(this.toolcacheFolderName, this.architecture);
-    core.info(JSON.stringify(foundVersions));
-    const availableVersions = foundVersions
-      .filter(item => item.endsWith('-ea') === !this.stable)
-      .map(item => {
-        return item.replace(/-ea$/, '');
-      });
-
-    core.info(`this.stable = ${this.stable}`);
-    core.info(`this.version = ${this.version}`);
-    core.info(JSON.stringify(availableVersions));
+    const availableVersions = tc
+      .findAllVersions(this.toolcacheFolderName, this.architecture)
+      .filter(item => item.endsWith('-ea') === !this.stable);
 
     const satisfiedVersions = availableVersions
-      .filter(item => semver.satisfies(item, this.version))
+      .filter(item => semver.satisfies(item.replace(/-ea$/, ''), this.version))
       .sort(semver.rcompare);
     if (!satisfiedVersions || satisfiedVersions.length === 0) {
       return null;
     }
 
-    core.info(JSON.stringify(satisfiedVersions));
-
     const javaPath = tc.find(this.toolcacheFolderName, satisfiedVersions[0], this.architecture);
-    core.info(JSON.stringify(javaPath));
     if (!javaPath) {
       return null;
     }
