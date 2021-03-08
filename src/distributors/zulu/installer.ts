@@ -71,16 +71,15 @@ export class ZuluDistributor extends JavaBase {
 
     const archiveName = fs.readdirSync(extractedJavaPath)[0];
     const archivePath = path.join(extractedJavaPath, archiveName);
-    const version = this.getToolcacheVersionName(javaRelease.version);
 
     const javaPath = await tc.cacheDir(
       archivePath,
       this.toolcacheFolderName,
-      version,
+      this.getToolcacheVersionName(javaRelease.version),
       this.architecture
     );
 
-    return { javaPath, javaVersion: javaRelease.version };
+    return { version: javaRelease.version, path: javaPath };
   }
 
   private async getAvailableVersions(): Promise<IZuluVersions[]> {
@@ -119,11 +118,6 @@ export class ZuluDistributor extends JavaBase {
       console.timeEnd('azul-retrieve-available-versions');
       console.log(`Available versions: [${availableVersions.length}]`);
       console.log(availableVersions.map(item => item.jdk_version.join('.')).join(', '));
-      core.endGroup();
-      core.startGroup('Print full information about available versions');
-      availableVersions.forEach(item => {
-        console.log(JSON.stringify(item));
-      });
       core.endGroup();
     }
 

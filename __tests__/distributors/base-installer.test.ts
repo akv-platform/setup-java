@@ -18,8 +18,8 @@ class EmptyJavaBase extends JavaBase {
 
   protected async downloadTool(javaRelease: JavaDownloadRelease): Promise<JavaInstallerResults> {
     return {
-      javaVersion: '11.0.8',
-      javaPath: `/toolcache/${this.toolcacheFolderName}/11.0.8`
+      version: '11.0.8',
+      path: `/toolcache/${this.toolcacheFolderName}/11.0.8/${this.architecture}`
     };
   }
 
@@ -46,18 +46,7 @@ describe('findInToolcache', () => {
 
   beforeEach(() => {
     spyTcFind = jest.spyOn(tc, 'find');
-    spyTcFind.mockImplementation((toolname: string, javaVersion: string, architecture: string) => {
-      const semverVersion = new semver.Range(javaVersion);
-
-      if (path.basename(javaPath) !== architecture || !javaPath.includes(toolname)) {
-        return '';
-      }
-
-      return semver.satisfies(actualJavaVersion, semverVersion) ? javaPath : '';
-    });
-
     spyTcFindAllVersions = jest.spyOn(tc, 'findAllVersions');
-    spyTcFindAllVersions.mockReturnValue([actualJavaVersion]);
   });
 
   afterEach(() => {
@@ -69,23 +58,63 @@ describe('findInToolcache', () => {
   it.each([
     [
       { version: '11', arch: 'x64', packageType: 'jdk' },
-      { javaVersion: actualJavaVersion, javaPath }
+      { version: actualJavaVersion, path: javaPath }
     ],
     [
       { version: '11.1', arch: 'x64', packageType: 'jdk' },
-      { javaVersion: actualJavaVersion, javaPath }
+      { version: actualJavaVersion, path: javaPath }
     ],
     [
       { version: '11.1.10', arch: 'x64', packageType: 'jdk' },
-      { javaVersion: actualJavaVersion, javaPath }
+      { version: actualJavaVersion, path: javaPath }
     ],
     [{ version: '11', arch: 'x64', packageType: 'jre' }, null],
     [{ version: '8', arch: 'x64', packageType: 'jdk' }, null],
     [{ version: '11', arch: 'x86', packageType: 'jdk' }, null],
     [{ version: '11', arch: 'x86', packageType: 'jre' }, null]
   ])(`should find java for path %s -> %s`, (input, expected) => {
+    spyTcFindAllVersions.mockReturnValue([actualJavaVersion]);
+    spyTcFind.mockImplementation((toolname: string, javaVersion: string, architecture: string) => {
+      const semverVersion = new semver.Range(javaVersion);
+
+      if (path.basename(javaPath) !== architecture || !javaPath.includes(toolname)) {
+        return '';
+      }
+
+      return semver.satisfies(actualJavaVersion, semverVersion) ? javaPath : '';
+    });
     mockJavaBase = new EmptyJavaBase(input);
     expect(mockJavaBase['findInToolcache']()).toEqual(expected);
+  });
+
+  it.each([
+    ['11', '11.0.3'],
+    ['11.0', '11.0.3'],
+    ['11.0.1', '11.0.1'],
+    ['11.0.3', '11.0.3'],
+    ['15', '15.0.2'],
+    ['x', '15.0.2'],
+    ['x-ea', '17.4.4-ea'],
+    ['11-ea', '11.3.2-ea'],
+    ['11.2-ea', '11.2.1-ea'],
+    ['11.2.1-ea', '11.2.1-ea']
+  ])('should choose correct java from tool-cache for input %s', (input, expected) => {
+    spyTcFindAllVersions.mockReturnValue([
+      '17.4.4-ea',
+      '11.0.2',
+      '15.0.2',
+      '11.0.3',
+      '11.2.1-ea',
+      '11.3.2-ea',
+      '11.0.1'
+    ]);
+    spyTcFind.mockImplementation(
+      (toolname: string, javaVersion: string, architecture: string) =>
+        `/hostedtoolcache/${toolname}/${javaVersion}/${architecture}`
+    );
+    mockJavaBase = new EmptyJavaBase({ version: input, arch: 'x64', packageType: 'jdk' });
+    const foundVersion = mockJavaBase['findInToolcache']();
+    expect(foundVersion?.version).toEqual(expected);
   });
 });
 
@@ -144,17 +173,17 @@ describe('setupJava', () => {
   it.each([
     [
       { version: '11', arch: 'x86', packageType: 'jdk' },
-      { javaVersion: actualJavaVersion, javaPath }
+      { version: actualJavaVersion, path: javaPath }
     ],
     [
       { version: '11.1', arch: 'x86', packageType: 'jdk' },
-      { javaVersion: actualJavaVersion, javaPath }
+      { version: actualJavaVersion, path: javaPath }
     ],
     [
       { version: '11.1.10', arch: 'x86', packageType: 'jdk' },
-      { javaVersion: actualJavaVersion, javaPath }
+      { version: actualJavaVersion, path: javaPath }
     ]
-  ])('should find java for path %s -> %s', (input, expected) => {
+  ])('should find java locally for %s', (input, expected) => {
     mockJavaBase = new EmptyJavaBase(input);
     expect(mockJavaBase.setupJava()).resolves.toEqual(expected);
     expect(spyTcFind).toHaveBeenCalled();
@@ -163,17 +192,17 @@ describe('setupJava', () => {
   it.each([
     [
       { version: '11', arch: 'x86', packageType: 'jre' },
-      { javaPath: `/toolcache/Java_Empty_jre/11.0.8`, javaVersion: '11.0.8' }
+      { path: `/toolcache/Java_Empty_jre/11.0.8/x86`, version: '11.0.8' }
     ],
     [
       { version: '11', arch: 'x64', packageType: 'jdk' },
-      { javaPath: `/toolcache/Java_Empty_jdk/11.0.8`, javaVersion: '11.0.8' }
+      { path: `/toolcache/Java_Empty_jdk/11.0.8/x64`, version: '11.0.8' }
     ],
     [
       { version: '11', arch: 'x64', packageType: 'jre' },
-      { javaPath: `/toolcache/Java_Empty_jre/11.0.8`, javaVersion: '11.0.8' }
+      { path: `/toolcache/Java_Empty_jre/11.0.8/x64`, version: '11.0.8' }
     ]
-  ])('download java with inputs %s, expcted %s', async (input, expected) => {
+  ])('download java with configuration %s', async (input, expected) => {
     mockJavaBase = new EmptyJavaBase(input);
     await expect(mockJavaBase.setupJava()).resolves.toEqual(expected);
     expect(spyTcFind).toHaveBeenCalled();

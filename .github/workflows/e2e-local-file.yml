@@ -41,7 +41,7 @@ jobs:
         with:
           distribution: 'jdkfile'
           jdkFile: ${{ runner.temp }}/${{ env.LocalFilename }}
-          java-version: '11.0.10'
+          java-version: '11.0.0-ea'
           architecture: x64
       - name: Verify Java version
         run: bash __tests__/verify-java.sh "11.0.10" "${{ steps.setup-java.outputs.path }}"
@@ -77,7 +77,7 @@ jobs:
         with:
           distribution: 'jdkfile'
           jdkFile: ${{ runner.temp }}/${{ env.LocalFilename }}
-          java-version: '11.0.0'
+          java-version: '11.0.0-ea'
           architecture: x64
       - name: Verify Java version
         run: bash __tests__/verify-java.sh "11.0" "${{ steps.setup-java.outputs.path }}"

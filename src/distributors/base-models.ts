@@ -5,8 +5,8 @@ export interface JavaInstallerOptions {
 }
 
 export interface JavaInstallerResults {
-  javaVersion: string;
-  javaPath: string;
+  version: string;
+  path: string;
 }
 
 export interface JavaDownloadRelease {
